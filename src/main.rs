@@ -1,8 +1,6 @@
-use mpi::{
-    datatype::{Partition, PartitionMut},
-    traits::*,
-};
-use std::{borrow::Borrow, iter};
+use mpi::datatype::{Partition, PartitionMut};
+use mpi::traits::*;
+use std::iter;
 
 fn main() {
     let universe = mpi::initialize().unwrap();

@@ -21,7 +21,7 @@ pub fn sort<'a>(values: &'a [i32], splitter: &[i32]) -> &'a [i32] {
         root_process.scatter_into(&mut recv_buf);
     }
 
-    let mut buckets: Vec<Vec<i32>> = Vec::new();
+    let mut buckets: Vec<Vec<i32>> = vec![Vec::new(); world_size as usize];
     recv_buf.into_iter().for_each(|x| {
         let idx = match splitter.binary_search(&x) {
             // we dont care weather the searched item is in splitter,
