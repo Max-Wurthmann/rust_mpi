@@ -14,7 +14,6 @@ pub fn sort<'a>(values: &'a [i32], splitter: &[i32]) -> &'a [i32] {
 
     let mut recv_buf: Vec<i32> = Vec::with_capacity(local_size);
 
-    let mut recv_buf = vec![0_i32; local_size];
     if rank == root_rank {
         let send_buf: Vec<i32> = (0..(world_size * local_size as i32)).collect();
         root_process.scatter_into_root(&send_buf, &mut recv_buf);
@@ -22,16 +21,20 @@ pub fn sort<'a>(values: &'a [i32], splitter: &[i32]) -> &'a [i32] {
         root_process.scatter_into(&mut recv_buf);
     }
 
-    // let mut local_data = recv_buf;
-    // local_data
-    //     .iter()
-    //     .map(|x| splitter.binary_search(x))
-    //     .map(|result: Result<usize, usize>| match result {
-    //         Ok(idx) => idx,
-    //         Err(idx) => idx,
-    //     }).for_each(f);
+    let mut buckets: Vec<Vec<i32>> = Vec::new();
+    recv_buf.into_iter().for_each(|x| {
+        let idx = match splitter.binary_search(&x) {
+            // we dont care weather the searched item is in splitter,
+            // we just care which bucket to put it in
+            Ok(idx) => idx,
+            Err(idx) => idx,
+        };
+        buckets[idx].push(x);
+    });
 
-    values
+    todo!()
+    // do alltoallv comm to distribute buckets
+    // sort locally
 }
 
 #[cfg(test)]
