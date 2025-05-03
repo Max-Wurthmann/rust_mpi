@@ -2,7 +2,7 @@ use mpi::{
     datatype::{Partition, PartitionMut},
     traits::*,
 };
-use std::iter;
+use std::{borrow::Borrow, iter};
 
 fn main() {
     let universe = mpi::initialize().unwrap();
@@ -16,11 +16,20 @@ fn main() {
 
     let send_buf: Vec<i32> = iter::repeat(rank).take(size as usize).collect();
     let counts: Vec<i32> = iter::repeat(1).take(size as usize).collect();
-    let displs: Vec<i32> = (0..3).collect();
+    let displs: Vec<i32> = (0..size).collect();
 
     let send_partition = Partition::new(&send_buf, counts.clone(), displs.clone());
 
+    counts.iter().zip(displs.iter()).all(|(a, b)| a + b <= size);
+
+    // let test: bool = counts
+    //     .borrow()
+    //     .iter()
+    //     .zip(displs.borrow().iter())
+    //     .all(|(&c, &d)| c + d <= n);
+
     let mut recv_buf: Vec<i32> = Vec::with_capacity(n_threads);
+    println!("counts {:?}, displs: {:?}", counts, displs);
     let mut recv_partiotion = PartitionMut::new(&mut recv_buf, counts, displs);
 
     world
