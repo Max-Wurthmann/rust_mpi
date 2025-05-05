@@ -1,6 +1,5 @@
 use mpi::datatype::{Partition, PartitionMut};
 use mpi::traits::*;
-use rust_mpi::{mpi_alltoallv, mpi_scatter};
 
 fn main() {
     let universe = mpi::initialize().unwrap();
