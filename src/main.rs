@@ -3,9 +3,6 @@ use mpi::traits::*;
 use rust_mpi::{mpi_alltoallv, mpi_scatter};
 
 fn main() {
-    mpi_scatter();
-    mpi_alltoallv();
-
     let universe = mpi::initialize().unwrap();
     let world = universe.world();
     let rank = world.rank();
